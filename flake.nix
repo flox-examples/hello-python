@@ -1,43 +1,12 @@
 {
-  description = "Hello in Python";
-
-  inputs.capacitor.url = "git+ssh://git@github.com/flox/capacitor?ref=v0";
-  inputs.capacitor.inputs.root.follows = "/";
-  inputs.capacitor.inputs.nixpkgs.follows = "nixpkgs/nixpkgs-stable";
-
-  inputs.nixpkgs.url = "git+ssh://git@github.com/flox/nixpkgs-flox";
-  inputs.nixpkgs.inputs.capacitor.follows = "capacitor";
-
-  inputs.floxpkgs.url = "git+ssh://git@github.com/flox/floxpkgs";
-  inputs.floxpkgs.inputs.capacitor.follows = "capacitor";
-  inputs.floxpkgs.inputs.nixpkgs.follows = "nixpkgs";
-
+  description = "Floxpkgs/Project Template";
   nixConfig.bash-prompt = "[flox] \\[\\033[38;5;172m\\]λ \\[\\033[0m\\]";
+  inputs.floxpkgs.url = "github:flox/floxpkgs";
 
-  outputs = args @ {capacitor, ...}:
-    capacitor args (
-      {
-        inputs,
-        self,
-        lib,
-        ...
-      }: {
-        devShells.default =
-          lib.optionalAttrs
-          (builtins.pathExists ./flox.toml)
-          (inputs.floxpkgs.lib.mkFloxShell ./flox.toml {});
+  # Declaration of external resources
+  # =================================
 
-        config = {
-          stabilities = {
-            stable = inputs.nixpkgs.stable;
-            staging = inputs.nixpkgs.staging;
-            unstable = inputs.nixpkgs.unstable;
-            default = inputs.nixpkgs.stable;
-          };
-          extraPlugins = [
-            (inputs.capacitor.plugins.allLocalResources {})
-          ];
-        };
-      }
-    );
+  # =================================
+
+  outputs = args @ {floxpkgs, ...}: floxpkgs.project args (_: {});
 }
