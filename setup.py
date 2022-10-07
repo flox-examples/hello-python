@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'hello-python = hello:hello',
+            'hello = hello:hello',
         ],
     }
 )
